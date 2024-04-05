@@ -8,5 +8,5 @@ This repository contains data and spatial analysis of the 2024 Smokehouse Creek 
 
 The initial contents of the repository can be navigated as follows:
 1. The project proposal can be viewed in the *Gaskill_Proposal.pdf* document.
-2. An exploratory version of the Google Earth Engine code can be viewed in the *TexasNBR - Google Earth Engine* link.
+2. An exploratory version of the Google Earth Engine code can be found here: https://code.earthengine.google.com/b8b073900b632ae680cd191b45446910
 3. The rubric can be viewed in the *Final_Project_Rubric.pdf* document.

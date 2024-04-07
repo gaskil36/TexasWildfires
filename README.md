@@ -11,7 +11,7 @@ The initial contents of the repository can be navigated as follows:
 2. Google Earth Engine code for raster generation of FCC, EVI, NBR, DNBR, Burned Severity, and Burned Binary can be found [here](https://code.earthengine.google.com/b80f5e7fed31c15e0ee0efca2c5e241f)
 3. The rubric can be viewed in the *Final_Project_Rubric.pdf* document.
 
-**Description of raster (.TIF) files generated in Google Earth Engine**
+### Description of raster (.TIF) files generated in Google Earth Engine
 Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imagery, but there were temporal inconsistencies.
 1. FCC: False color composite, consisting of Short-Wave Infrared 2, Near Infrared, and Red bands of Landsat 9.
 2. EVI: Enhanced Vegetation Index highlighting vegetation cover, using the following formula: EVI = 2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE  + 1))

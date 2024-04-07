@@ -8,7 +8,7 @@ This repository contains data and spatial analysis of the 2024 Smokehouse Creek 
 
 The initial contents of the repository can be navigated as follows:
 1. The project proposal can be viewed in the *Gaskill_Proposal.pdf* document.
-2. Google Earth Engine code for raster generation of FCC, EVI, NBR, DNBR, Burned Severity, and Burned Binary can be found [here](https://code.earthengine.google.com/9ff577d42bc4e3665fa30b06c265c1c8)
+2. Google Earth Engine code for raster generation of FCC, EVI, NBR, DNBR, Burned Severity, and Burned Binary can be found [here](https://code.earthengine.google.com/b80f5e7fed31c15e0ee0efca2c5e241f)
 3. The rubric can be viewed in the *Final_Project_Rubric.pdf* document.
 
 **Description of raster (.TIF) files generated in Google Earth Engine**

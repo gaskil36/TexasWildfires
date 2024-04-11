@@ -43,7 +43,7 @@ Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imag
 ![Difference Normalized Burn Ratio](Images/7_DNBR.png)
 
 ### Burned Severity Classification
-<img src="Images/9_burnSeverity.png" alt="Burned Severity" width="850"><img src="Images/9_legend.png" alt="Legend" width="150">
+<img src="Images/9_burnSeverity.png" alt="Burned Severity" width="800"><img src="Images/9_legend.png" alt="Legend" width="200">
 
 ### Burned vs Unburned Binary Classification
 ![Burned vs Unburned Binary Classification](Images/10_burnBinary.png)

@@ -22,6 +22,7 @@ The initial contents of the repository can be navigated as follows:
 2. Each output was exported from Google Earth Engine and visualized in QGIS.
 3. The Texas and Oklahoma County Boundaries was subsetted and clipped to only include counties within the extent of the burn rasters.
 4. The Texas and Oklahoma County 2020 Census data was opened in ArcGIS, and clipped to only include counties within the extent of the burn rasters. See below for an initial visualization.
+5. A Google Cloud Postgres SQL database instance was set up and initialized with the name of "remotesensing", utilizing the existing Google Earth Engine Project with a subdirectory for this analysis.
 
 ### 2020 Census Data Clipped to Extent of the Smokehouse Creek Fire
 ![Prefire False Color Composite](Images/population_visualization.png)

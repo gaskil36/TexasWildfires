@@ -26,8 +26,8 @@ The initial contents of the repository can be navigated as follows:
 
 ### 2020 Census Data Clipped to Extent of the Smokehouse Creek Fire
 ![Prefire False Color Composite](Images/population_visualization.png)
-Texas Counties Include: Wheeler, Gray, Carson, Potter, Hemphill, Roberts, Hutchinson, Lipscomb, Ochiltree, Hansford, Sherman, and Moore Counties
-Oklahoma Counties Include: Ellis, Woodward, Dewey, Roger Mills, Custer, Beckham, Washita
+1. Texas Counties Include: Wheeler, Gray, Carson, Potter, Hemphill, Roberts, Hutchinson, Lipscomb, Ochiltree, Hansford, Sherman, and Moore Counties
+2. Oklahoma Counties Include: Ellis, Woodward, Dewey, Roger Mills, Custer, Beckham, Washita
 
 ## Description of raster (.TIF) files generated in Google Earth Engine
 Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imagery, but there were temporal inconsistencies.

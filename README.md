@@ -32,6 +32,9 @@ The initial contents of the repository can be navigated as follows:
 1. Texas Counties Include: Wheeler, Gray, Carson, Potter, Hemphill, Roberts, Hutchinson, Lipscomb, Ochiltree, Hansford, Sherman, and Moore Counties
 2. Oklahoma Counties Include: Ellis, Woodward, Dewey, Roger Mills, Custer, Beckham, Washita
 
+### 2021 CONUS Landcover Raster Clipped to Extent of the Smokehouse Creek Fire
+![2021 CONUS Landcover Raster](Images/conus_cover.png)
+
 ## Description of raster (.TIF) files generated in Google Earth Engine
 Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imagery, but there were temporal inconsistencies.
 1. FCC: False color composite, consisting of Short-Wave Infrared 2, Near Infrared, and Red bands of Landsat 9.

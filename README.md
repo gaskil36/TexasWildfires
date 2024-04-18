@@ -72,3 +72,5 @@ Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imag
 
 ### Burned vs Unburned Binary Classification
 ![Burned vs Unburned Binary Classification](Images/10_burnBinary.png)
+
+![Import rasters and shapefiles from Cloud Storage Bucket to Local Cloud Console Environment](Images/bucket_to_cloud_console.png)

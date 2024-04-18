@@ -69,8 +69,34 @@ Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imag
 ### Burned Severity Classification
 <img src="Images/9_burnSeverity.png" alt="Burned Severity" width="1000"> <p align="center"><img src="Images/9_legend.png" alt="Legend" width="250"></p>
 
-
 ### Burned vs Unburned Binary Classification
 ![Burned vs Unburned Binary Classification](Images/10_burnBinary.png)
+
+## Working with Google Cloud
+### Pre-Processing Steps
+1. Create a cloud project
+2. Connect to Github and create triggers for push and pull
+3. Create a cloud storage bucket and upload all rasters and shapefiles
+4. Create Postgresql Instance in Google Cloud
+   
+### PostGIS Setup  
+1. Navigate to the Postgresql bin  
+   `cd /usr/lib/postgresql/16/bin`
+2. Install PostGIS to Postgres  
+   `sudo apt install postgis`
+
+### Initial Connection, Database Creation, and Extensions
+1. Connect to Postgresql  
+   `gcloud sql connect remotesensing --user=postgres --quiet1`  
+2. Create Database    
+   `CREATE DATABASE TEXASWILDFIRES;`  
+3. Connect to database    
+   `\C TEXASWILDFIRES;`  
+4. Create Postgis Extension   
+   `CREATE EXTENSION POSTGIS;`  
+5. Create Postgis Raster Extension    
+   `CREATE EXTENSION POSTGIS_RASTER;`  
+
+
 
 ![Import rasters and shapefiles from Cloud Storage Bucket to Local Cloud Console Environment](Images/bucket_to_cloud_console.png)

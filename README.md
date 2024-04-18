@@ -79,24 +79,56 @@ Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imag
 3. Create a cloud storage bucket and upload all rasters and shapefiles
 4. Create Postgresql Instance in Google Cloud
    
-### PostGIS Setup  
+### PostGIS Setup (in cloud console)
 1. Navigate to the Postgresql bin  
-   `cd /usr/lib/postgresql/16/bin`
-2. Install PostGIS to Postgres  
-   `sudo apt install postgis`
-
-### Initial Connection, Database Creation, and Extensions
+   ```shell
+   cd /usr/lib/postgresql/16/bin
+   ```
+3. Install PostGIS to Postgres  
+   ```shell
+   sudo apt install postgis
+   ```
+   
+### Initial Connection, Database Creation, and Extensions (in cloud SQL shell)
 1. Connect to Postgresql  
-   `gcloud sql connect remotesensing --user=postgres --quiet1`  
+   ```shell
+   gcloud sql connect remotesensing --user=postgres --quiet1
+   ```  
 2. Create Database    
-   `CREATE DATABASE TEXASWILDFIRES;`  
-3. Connect to database    
-   `\C TEXASWILDFIRES;`  
-4. Create Postgis Extension   
-   `CREATE EXTENSION POSTGIS;`  
-5. Create Postgis Raster Extension    
-   `CREATE EXTENSION POSTGIS_RASTER;`  
+   ```SQL
+   CREATE DATABASE TEXASWILDFIRES;
+   ``` 
+4. Connect to database    
+   ```SQL
+   \C TEXASWILDFIRES;
+   ```
+6. Create Postgis Extension   
+   ```SQL
+   CREATE EXTENSION POSTGIS;
+   ```  
+8. Create Postgis Raster Extension    
+   ```SQL
+   CREATE EXTENSION POSTGIS_RASTER;
+   ```
 
-
-
+### Import rasters and shapefiles from Cloud Storage Bucket to Local Cloud Console Environment
+1. Navigate back to default directory
+   ```shell
+   cd ~
+   ```
+2. Run the gsutil to access each file in the bucket and save to local directory
+   ```shell
+   gsutil cp gs://texas_wildfire_bucket/Texas_Prefire.tif Texas_Prefire.tif
+   gsutil cp gs://texas_wildfire_bucket/Texas_Postfire.tif Texas_Postfire.tif
+   gsutil cp gs://texas_wildfire_bucket/Texas_NBR_Prefire.tif Texas_NBR_Prefire.tif
+   gsutil cp gs://texas_wildfire_bucket/Texas_NBR_Postfire.tif Texas_NBR_Postfire.tif
+   gsutil cp gs://texas_wildfire_bucket/Texas_EVI_Prefire.tif Texas_EVI_Prefire.tif
+   gsutil cp gs://texas_wildfire_bucket/Texas_EVI_Postfire.tif Texas_EVI_Postfire.tif
+   gsutil cp gs://texas_wildfire_bucket/Texas_DNBR.tif Texas_DNBR.tif
+   gsutil cp gs://texas_wildfire_bucket/Texas_BurntClassesClipped.tif Texas_BurntClassesClipped.tif
+   gsutil cp gs://texas_wildfire_bucket/Texas_burnSeverityClipped.tif Texas_burnSeverityClipped.tif
+   gsutil cp gs://texas_wildfire_bucket/classified_landcover_clipped.tif classified_landcover_clipped.tif
+   gsutil cp gs://texas_wildfire_bucket/TX_OK_Fire_Blocks.shp TX_OK_Fire_Blocks.shp
+   ```
+The screenshot below shows the raster and vector files listed in the local directory:
 ![Import rasters and shapefiles from Cloud Storage Bucket to Local Cloud Console Environment](Images/bucket_to_cloud_console.png)

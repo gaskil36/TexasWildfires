@@ -100,7 +100,7 @@ Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imag
    ``` 
 4. Connect to database    
    ```SQL
-   \C TEXASWILDFIRES;
+   \c texaswildfires;
    ```
 6. Create Postgis Extension   
    ```SQL

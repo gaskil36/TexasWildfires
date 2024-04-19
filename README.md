@@ -189,3 +189,15 @@ The screenshot below shows the raster and vector files listed in the local direc
 
 ### Convert Vector to SQL File
 1. With enough space on the disk and important files backed up, we can continue to convert the last vector shapefile to an .sql file
+2. An error occurred when attempting to run the shp2pgsql command
+![shp2pgsql Error](Images/shp2pgsql_error.png)
+3. This can be fixed by importing the .shx and .dbf files stored in the Cloud Bucket to the local home console directory
+   ```shell
+   gsutil cp gs://texas_wildfire_bucket/TX_OK_Fire_Blocks.shx TX_OK_Fire_Blocks.shx
+   gsutil cp gs://texas_wildfire_bucket/TX_OK_Fire_Blocks.dbf TX_OK_Fire_Blocks.dbf
+   ```
+4. The shp2pgsql command can now be run successfully
+   ```shell
+   shp2pgsql -s 4326 -I TX_OK_Fire_Blocks.shp public.TX_OK_Fire_Blocks > TX_OK_Fire_Blocks.sql
+   ```
+   

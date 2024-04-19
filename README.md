@@ -214,3 +214,35 @@ The screenshot below shows the raster and vector files listed in the local direc
    ```
 3. The home directory should now only contain the .sql files for all raster and vector files
    ![shp2pgsql Error](Images/clean_wd_sql_only.png)
+
+### Connect to Postgres Database and Upload all .sql Files
+1. We must first get the current directory in which the .sql files are stored and copy it to the clipboard
+2. ```shell
+   pwd
+   /home/bengaskill12
+   ```
+3. Then connect to the Postgresql and the database
+   ```shell
+   gcloud sql connect remotesensing --user=postgres --quiet
+   ```
+   ```SQL
+   \c texaswildfires
+   ```
+4. Within the database paste the path to the working directory
+   ```SQL
+   \cd /home/bengaskill12
+   ```
+5. Import each .sql file to the database
+   ```SQL
+   \i texas_prefire.sql
+   \i texas_postfire.sql
+   \i texas_nbr_prefire.sql
+   \i texas_nbr_postfire.sql
+   \i texas_evi_prefire.sql
+   \i texas_evi_postfire.sql
+   \i texas_DNBR.sql
+   \i texas_BurntClassesClipped.sql
+   \i texas_burnSeverityClipped.sql
+   \i classified_landcover_clipped.sql
+   \i TX_OK_Fire_Blocks.sql
+   ```

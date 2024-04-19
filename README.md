@@ -200,4 +200,17 @@ The screenshot below shows the raster and vector files listed in the local direc
    ```shell
    shp2pgsql -s 4326 -I TX_OK_Fire_Blocks.shp public.TX_OK_Fire_Blocks > TX_OK_Fire_Blocks.sql
    ```
-   
+
+### Clean Home Directory and Backup Important Files
+1. We can now remove the original shapefile, .shx and .dbf files from the home directory
+   ``shell
+   rm TX_OK_Fire_Blocks.shp
+   rm TX_OK_Fire_Blocks.shx
+   rm TX_OK_Fire_Blocks.dbf
+   ```
+2. Backup the final population vector .sql file by Pushing to the Cloud Storage Bucket
+    ```shell
+   gsutil cp TX_OK_Fire_Blocks.sql gs://texas_wildfire_bucket/
+   ```
+3. The home directory should now only contain the .sql files for all raster and vector files
+   ![shp2pgsql Error](Images/clean_wd_sql_only.png)

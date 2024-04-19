@@ -236,7 +236,7 @@ The screenshot below shows the raster and vector files listed in the local direc
    gsutil cp population_third.sql gs://texas_wildfire_bucket/
    ```
 3. The home directory should now only contain the .sql files for all raster and vector files
-   ![shp2pgsql Error](Images/clean_wd_sql_only.png)
+![Clean Home Directory](Images/clean_wd_sql.png)
 
 ### Connect to Postgres Database and Upload all .sql Files
 1. We must first get the current directory in which the .sql files are stored and copy it to the clipboard

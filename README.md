@@ -203,7 +203,7 @@ The screenshot below shows the raster and vector files listed in the local direc
 
 ### Clean Home Directory and Backup Important Files
 1. We can now remove the original shapefile, .shx and .dbf files from the home directory
-   ``shell
+   ```shell
    rm TX_OK_Fire_Blocks.shp
    rm TX_OK_Fire_Blocks.shx
    rm TX_OK_Fire_Blocks.dbf

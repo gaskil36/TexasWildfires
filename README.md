@@ -172,4 +172,20 @@ The screenshot below shows the raster and vector files listed in the local direc
 3. The home directory should now only contain the .sql files and the unconverted .shp files:  
 ![.tif Files Removed](Images/full_storage.png)
 
+### Backup All SQL Files
+1. Safely store all raster .sql files by Pushing to the Cloud Storage Bucket
+   ```shell
+   gsutil cp texas_prefire.sql gs://texas_wildfire_bucket/
+   gsutil cp texas_postfire.sql gs://texas_wildfire_bucket/
+   gsutil cp texas_nbr_prefire.sql gs://texas_wildfire_bucket/
+   gsutil cp texas_nbr_postfire.sql gs://texas_wildfire_bucket/
+   gsutil cp texas_evi_prefire.sql gs://texas_wildfire_bucket/
+   gsutil cp texas_evi_postfire.sql gs://texas_wildfire_bucket/
+   gsutil cp texas_DNBR.sql gs://texas_wildfire_bucket/
+   gsutil cp texas_BurntClassesClipped.sql gs://texas_wildfire_bucket/
+   gsutil cp texas_burnSeverityClipped.sql gs://texas_wildfire_bucket/
+   gsutil cp classified_landcover_clipped.sql gs://texas_wildfire_bucket/
+   ```
+
 ### Convert Vector to SQL File
+1. With enough space on the disk and important files backed up, we can continue to convert the last vector shapefile to an .sql file

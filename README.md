@@ -236,7 +236,7 @@ The screenshot below shows the raster and vector files listed in the local direc
    gsutil cp population_third.sql gs://texas_wildfire_bucket/
    ```
 3. The home directory should now only contain the .sql files for all raster and vector files
-![Clean Home Directory](Images/clean_wd_sql.png)
+![Clean Home Directory](Images/clean_wd.png)
 
 ### Connect to Postgres Database and Upload all .sql Files
 1. We must first get the current directory in which the .sql files are stored and copy it to the clipboard
@@ -267,5 +267,9 @@ The screenshot below shows the raster and vector files listed in the local direc
    \i texas_BurntClassesClipped.sql
    \i texas_burnSeverityClipped.sql
    \i classified_landcover_clipped.sql
-   \i TX_OK_Fire_Blocks.sql
+   \i population_first.sql
+   \i population_second.sql
+   \i population_third.sql
    ```
+## Database Table Structure After all .sql Files are Uploaded
+![Database Table Structure After all .sql Files are Uploaded](Images/table_structure.png)

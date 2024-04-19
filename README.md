@@ -132,3 +132,44 @@ Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imag
    ```
 The screenshot below shows the raster and vector files listed in the local directory:
 ![Import rasters and shapefiles from Cloud Storage Bucket to Local Cloud Console Environment](Images/bucket_to_cloud_console.png)
+
+### Convert all Rasters to SQL Files
+1. When trying to run raster2pgsql, I encountered the following error  
+   ```shell
+   command "raster2pgsql" not found
+   ```
+2. If this error occurs, navigate back to the Postgresql bin and reinstall PostGIS before trying again
+3. We can now successfully run the raster2pgsql command to convert all .tif files to .sql
+   ```shell
+   raster2pgsql -s 4326 -I -C -M Texas_Prefire.tif public.texas_prefire_rast > texas_prefire.sql
+   raster2pgsql -s 4326 -I -C -M Texas_Postfire.tif public.texas_postfire_rast > texas_postfire.sql
+   raster2pgsql -s 4326 -I -C -M Texas_NBR_Prefire.tif public.texas_nbr_prefire_rast > texas_nbr_prefire.sql
+   raster2pgsql -s 4326 -I -C -M Texas_NBR_Postfire.tif public.texas_nbr_postfire_rast > texas_nbr_postfire.sql
+   raster2pgsql -s 4326 -I -C -M Texas_EVI_Prefire.tif public.texas_evi_prefire_rast > texas_evi_prefire.sql
+   raster2pgsql -s 4326 -I -C -M Texas_EVI_Postfire.tif public.texas_evi_postfire_rast > texas_evi_postfire.sql
+   raster2pgsql -s 4326 -I -C -M Texas_DNBR.tif public.texas_DNBR_rast > texas_DNBR.sql
+   raster2pgsql -s 4326 -I -C -M Texas_BurntClassesClipped.tif public.texas_BurntClassesClipped_rast > texas_BurntClassesClipped.sql
+   raster2pgsql -s 4326 -I -C -M Texas_burnSeverityClipped.tif public.texas_burnSeverityClipped_rast > texas_burnSeverityClipped.sql
+   raster2pgsql -s 4326 -I -C -M classified_landcover_clipped.tif public.classified_landcover_clipped_rast > classified_landcover_clipped.sql
+   ```
+   
+### Fix 100% Storage in the Home Directory
+1. Before running the shp2pgsql command for shapefiles, I encountered the following error:
+![Full Storage](Images/full_storage.png)
+2. Remove the unnecessary .tif files that are stored in the home directory. They are safely stored in the cloud storage bucket.
+   ```shell
+   rm Texas_Prefire.tif
+   rm Texas_Postfire.tif
+   rm Texas_NBR_Prefire.tif
+   rm Texas_NBR_Postfire.tif
+   rm Texas_EVI_Prefire.tif
+   rm Texas_EVI_Postfire.tif
+   rm Texas_DNBR.tif
+   rm Texas_BurntClassesClipped.tif
+   rm Texas_burnSeverityClipped.tif
+   rm classified_landcover_clipped.tif
+   ```
+3. The home directory should now only contain the .sql files and the unconverted .shp files:  
+![.tif Files Removed](Images/full_storage.png)
+
+### Convert Vector to SQL File

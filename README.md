@@ -193,28 +193,47 @@ The screenshot below shows the raster and vector files listed in the local direc
    ```shell
    rm TX_OK_Fire_Blocks.shp
    ```
-4. An error occurred when attempting to run the shp2pgsql command
+3. Using ArcGIS Pro, I subsetted the shapefile into the following 3 files using the following parameters:  
+   Select by attribute where FID <= 13425 <- Save layer as shapefile called `population_first.shp`  
+   Select by attribute where FID >= 13426 And FID <= 20138 <- Save layer as shapefile called `population_second.shp`  
+   Select by attribute where FID >= 20139 <- Save layer as shapefile called `population_third.shp`
+4. An error might occur when attempting to run the shp2pgsql command
 ![shp2pgsql Error](Images/shp2pgsql_error.png)
-5. This can be fixed by importing the .shx and .dbf files stored in the Cloud Bucket to the local home console directory
+6. This can be fixed by importing the .shx and .dbf files stored in the Cloud Bucket to the local home console directory
    ```shell
-   gsutil cp gs://texas_wildfire_bucket/TX_OK_Fire_Blocks.shx TX_OK_Fire_Blocks.shx
-   gsutil cp gs://texas_wildfire_bucket/TX_OK_Fire_Blocks.dbf TX_OK_Fire_Blocks.dbf
-   ```
-6. The shp2pgsql command can now be run successfully
-   ```shell
-   shp2pgsql -s 4326 -I TX_OK_Fire_Blocks.shp public.TX_OK_Fire_Blocks > TX_OK_Fire_Blocks.sql
-   ```
+   gsutil cp gs://texas_wildfire_bucket/population_first.shx population_first.shx
+   gsutil cp gs://texas_wildfire_bucket/population_first.dbf population_first.dbf
 
+   gsutil cp gs://texas_wildfire_bucket/population_second.shx population_second.shx
+   gsutil cp gs://texas_wildfire_bucket/population_second.dbf population_second.dbf
+   ```
+7. The shp2pgsql command can now be run successfully
+   ```shell
+   shp2pgsql -s 4326 -I population_first.shp public.population_first > population_first.sql
+   shp2pgsql -s 4326 -I population_second.shp public.population_second > population_second.sql
+   shp2pgsql -s 4326 -I population_third.shp public.population_third > population_third.sql
+   ```
+   
 ### Clean Home Directory and Backup Important Files
 1. We can now remove the original shapefile, .shx and .dbf files from the home directory
    ```shell
-   rm TX_OK_Fire_Blocks.shp
-   rm TX_OK_Fire_Blocks.shx
-   rm TX_OK_Fire_Blocks.dbf
+   rm population_first.shp
+   rm population_first.shx
+   rm population_first.dbf
+
+   rm population_second.shp
+   rm population_second.shx
+   rm population_second.dbf
+
+   rm population_third.shp
+   rm population_third.shx
+   rm population_third.dbf
    ```
 2. Backup the final population vector .sql file by Pushing to the Cloud Storage Bucket
     ```shell
-   gsutil cp TX_OK_Fire_Blocks.sql gs://texas_wildfire_bucket/
+   gsutil cp population_first.sql gs://texas_wildfire_bucket/
+   gsutil cp population_second.sql gs://texas_wildfire_bucket/
+   gsutil cp population_third.sql gs://texas_wildfire_bucket/
    ```
 3. The home directory should now only contain the .sql files for all raster and vector files
    ![shp2pgsql Error](Images/clean_wd_sql_only.png)

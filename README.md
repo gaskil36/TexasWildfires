@@ -92,7 +92,7 @@ Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imag
 ### Initial Connection, Database Creation, and Extensions (in cloud SQL shell)
 1. Connect to Postgresql  
    ```shell
-   gcloud sql connect remotesensing --user=postgres --quiet1
+   gcloud sql connect remotesensing --user=postgres --quiet
    ```  
 2. Create Database    
    ```SQL

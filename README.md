@@ -291,4 +291,26 @@ The screenshot below shows the raster and vector files listed in the local direc
    SELECT COUNT(name)
    FROM population_all;
    ```  
-![Ensure the operation completed successfully and all 26,851 rows are present](Images/count_return.png)
+![Ensure the operation completed successfully and all 26,851 rows are present](Images/count_return.png)  
+5. The original population dataset has many unnecessary fields. Process the population dataset by only including relevant fields. The description for each field can be found [here](https://www.arcgis.com/home/item.html?id=b3642e91b49548f5af772394b0537681&view=list&sortOrder=desc&sortField=defaultFSOrder#data)
+   ```
+   Fields to keep:
+   gid
+   geoid
+   county_nam
+   state_name
+   p0010001 (total population)
+   h0010001 (total housing units)
+   arealand (measured in square meters)
+   areawatr (measured in square meters)
+   shape_leng
+   shape_area
+   ```
+6. Create a new table for Filtered Population, including only the relevant fields.
+   ```SQL
+   CREATE TABLE population_filtered AS
+   SELECT gid, geoid, county_nam AS county, state_name AS state, p0010001 AS total_population, h0010001 AS total_housing_units, arealand AS area_land, areawatr AS area_water, shape_leng, shape_area
+   FROM population_all;
+   ```
+![Filtered Table](Images/filtered_table.png)
+8. The data is already in the First Normal Form since there are only single-valued attributes.

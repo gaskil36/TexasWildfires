@@ -273,3 +273,22 @@ The screenshot below shows the raster and vector files listed in the local direc
    ```
 ## Database Table Structure After all .sql Files are Uploaded
 ![Database Table Structure After all .sql Files are Uploaded](Images/table_structure.png)
+
+## Database Management: Data Cleaning and Normalization
+1. The next step is to reconstruct the population dataset by joining the data into one single table  
+2. This is simple since population_first, population_second, and population_third all have the same exact structure
+3. Create a new table called population_all  
+   ```SQL
+   CREATE TABLE population_all AS
+   SELECT * FROM population_first
+   UNION ALL
+   SELECT * FROM population_second
+   UNION ALL
+   SELECT * FROM population_third;
+   ```  
+4. Ensure the operation completed successfully and all 26,851 rows are present
+   ```SQL
+   SELECT COUNT(name)
+   FROM population_all;
+   ```  
+![Ensure the operation completed successfully and all 26,851 rows are present](Images/ensure_success.png)

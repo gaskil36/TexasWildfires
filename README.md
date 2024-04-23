@@ -314,3 +314,24 @@ The screenshot below shows the raster and vector files listed in the local direc
    ```
 ![Filtered Table](Images/filtered_table.png)
 8. The data is already in the First Normal Form since there are only single-valued attributes.
+9. Further process the data by creating a table of summary statistics on the county level  
+   - The table will contain Population by County, along with the other fields at the county level instead of the block level  
+   ```SQL
+   CREATE TABLE population_by_county AS
+   SELECT
+     county,
+     state,
+     COUNT(DISTINCT geoid) AS total_blocks,
+     SUM(total_population) AS total_population,
+     SUM(total_housing_units) AS total_housing_units,
+     -- area_land, area_water are considered varchars. I had to cast to an integer type
+     SUM(CAST(area_land AS INT)) AS area_land,
+     SUM(CAST(area_water AS INT)) AS area_water,
+     SUM(shape_leng) AS shape_leng,
+     SUM(shape_area) AS shape_area
+   FROM
+     population_filtered
+   GROUP BY
+     state, county;
+   ```
+![Population By County](Images/population_by_county.png)

@@ -291,4 +291,4 @@ The screenshot below shows the raster and vector files listed in the local direc
    SELECT COUNT(name)
    FROM population_all;
    ```  
-![Ensure the operation completed successfully and all 26,851 rows are present](Images/ensure_success.png)
+![Ensure the operation completed successfully and all 26,851 rows are present](Images/count_return.png)

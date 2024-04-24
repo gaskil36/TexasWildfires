@@ -314,7 +314,7 @@ The screenshot below shows the raster and vector files listed in the local direc
    FROM population_all;
    ```
 ![Filtered Table](Images/updated_filtered_population.png)
-8. The data is already in the First Normal Form since there are only single-valued attributes.
+8. The data is already in the First Normal Form since there are only single-valued attributes.  
 9. Further process the data by creating a table of summary statistics on the county level  
    - The table will contain Population by County, along with the other fields at the county level instead of the block level  
    ```SQL
@@ -337,3 +337,23 @@ The screenshot below shows the raster and vector files listed in the local direc
      state, county;
    ```
 ![Population By County](Images/population_by_county.png)
+
+## Spatial Queries
+### All of the spatial queries for this project involve raster data, which has been difficult to work in using PostGIS
+#### I began by running spatial queries on the binary burn raster and the classified burn severity raster
+1. Print the count of unburnt pixels vs burnt pixels to identify how to query for each type
+   ```SQL
+   SELECT (ST_ValueCount(rast)).value AS pixel_value,
+       (ST_ValueCount(rast)).count AS pixel_count
+   FROM texas_burntclassesclipped_rast;
+   ```
+   This query successfully returns the count of unburnt pixels (0), and burnt pixels (255):  
+![Binary Count Working](Images/binary_count_working.png)
+2. Print the count of each class in the burn severity classification raster
+   ```SQL
+   SELECT (ST_ValueCount(rast)).value AS pixel_value,
+       (ST_ValueCount(rast)).count AS pixel_count
+   FROM texas_burnseverityclipped_rast;
+   ```
+   The results of this query are confusing. I expected 5 classes and instead only got 3 back:  
+![Binary Count Working](Images/classes_count_issue.png)

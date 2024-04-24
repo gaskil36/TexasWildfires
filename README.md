@@ -305,11 +305,12 @@ The screenshot below shows the raster and vector files listed in the local direc
    areawatr (measured in square meters)
    shape_leng
    shape_area
+   geom
    ```
 6. Create a new table for Filtered Population, including only the relevant fields.
    ```SQL
    CREATE TABLE population_filtered AS
-   SELECT gid, geoid, county_nam AS county, state_name AS state, p0010001 AS total_population, h0010001 AS total_housing_units, arealand AS area_land, areawatr AS area_water, shape_leng, shape_area
+   SELECT gid, geoid, county_nam AS county, state_name AS state, p0010001 AS total_population, h0010001 AS total_housing_units, arealand AS area_land, areawatr AS area_water, shape_leng, shape_area, geom
    FROM population_all;
    ```
 ![Filtered Table](Images/filtered_table.png)
@@ -328,7 +329,9 @@ The screenshot below shows the raster and vector files listed in the local direc
      SUM(CAST(area_land AS INT)) AS area_land,
      SUM(CAST(area_water AS INT)) AS area_water,
      SUM(shape_leng) AS shape_leng,
-     SUM(shape_area) AS shape_area
+     SUM(shape_area) AS shape_area,
+     geom
+   
    FROM
      population_filtered
    GROUP BY

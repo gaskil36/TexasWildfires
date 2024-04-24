@@ -313,7 +313,7 @@ The screenshot below shows the raster and vector files listed in the local direc
    SELECT gid, geoid, county_nam AS county, state_name AS state, p0010001 AS total_population, h0010001 AS total_housing_units, arealand AS area_land, areawatr AS area_water, shape_leng, shape_area, geom
    FROM population_all;
    ```
-![Filtered Table](Images/filtered_table.png)
+![Filtered Table](Images/updated_filtered_population.png)
 8. The data is already in the First Normal Form since there are only single-valued attributes.
 9. Further process the data by creating a table of summary statistics on the county level  
    - The table will contain Population by County, along with the other fields at the county level instead of the block level  

@@ -330,7 +330,6 @@ The screenshot below shows the raster and vector files listed in the local direc
      SUM(CAST(area_water AS INT)) AS area_water,
      SUM(shape_leng) AS shape_leng,
      SUM(shape_area) AS shape_area,
-     geom
    
    FROM
      population_filtered

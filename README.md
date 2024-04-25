@@ -393,7 +393,7 @@ The screenshot below shows the raster and vector files listed in the local direc
    GROUP BY
        pixel_value;
    ```
-Pixel value 0 has an area of 1747064171496194100 (sq m); pixel value 255 has an area of 47182212539266000 which is still way too large. The correct area in sq meters of 73,354,848,000 was checked using the populationd dataset: 
+Pixel value 0 has an area of 1747064171496194100 (sq m); pixel value 255 has an area of 47182212539266000 which is still way too large. The correct area in sq meters of 73,354,848,000 was checked using the population dataset: 
    ```SQL
       -- Get the total area of counties in the study area for reference
    -- Result: 73354848000.516898197

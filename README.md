@@ -357,3 +357,46 @@ The screenshot below shows the raster and vector files listed in the local direc
    ```
    The results of this query are confusing. I expected 5 classes and instead only got 3 back:  
 ![Binary Count Working](Images/classes_count_issue.png)
+
+3. These queries attempt to get the area burnt and unburnt, but there are issues with the units. One pixel should be 30x30, but the area results are too large
+   ```SQL
+   -- Calculate the total area of each pixel (one pixel should be 30x30 meters)
+   WITH pixel_areas AS (
+       SELECT
+           -- Calculate the total number of pixels in the raster and cast to bigint
+           CAST(ST_Width(rast) * ST_Height(rast) AS bigint) AS total_pixels,
+           -- Calculate the area represented by each pixel in square meters
+           CAST(ST_Width(rast) * ST_Height(rast) AS bigint) * (30 * 30) AS area_per_pixel
+       FROM
+           texas_burntclassesclipped_rast
+   )
+   
+   -- Calculate total burnt and unburnt area
+   SELECT
+       -- Pixel value representing burnt or unburnt areas
+       pixel_value,
+       -- Calculate the total burnt or unburnt area by summing the product of pixel count and area per pixel
+       SUM(pixel_count * area_per_pixel) AS total_area
+   FROM
+       (
+           -- Count the occurrences of each pixel value in the raster
+           SELECT
+               (ST_ValueCount(rast)).value AS pixel_value,
+               (ST_ValueCount(rast)).count AS pixel_count
+           FROM
+               texas_burntclassesclipped_rast
+       ) AS counts,
+       pixel_areas
+   WHERE
+       -- Filter for pixel values representing burnt (255) or unburnt (0) areas
+       pixel_value IN (0, 255)
+   GROUP BY
+       pixel_value;
+   ```
+Pixel value 0 has an area of 1747064171496194100 (sq m); pixel value 255 has an area of 47182212539266000 which is still way too large. The correct area in sq meters of 73,354,848,000 was checked using the populationd dataset: 
+   ```SQL
+      -- Get the total area of counties in the study area for reference
+   -- Result: 73354848000.516898197
+   SELECT SUM(shape_area) FROM
+     population_by_county LIMIT 1000;
+   ```

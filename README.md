@@ -310,7 +310,8 @@ The screenshot below shows the raster and vector files listed in the local direc
 6. Create a new table for Filtered Population, including only the relevant fields.
    ```SQL
    CREATE TABLE population_filtered AS
-   SELECT gid, geoid, county_nam AS county, state_name AS state, p0010001 AS total_population, h0010001 AS total_housing_units, arealand AS area_land, areawatr AS area_water, shape_leng, shape_area, geom
+   SELECT gid, geoid, county_nam AS county, state_name AS state, p0010001 AS total_population,
+          h0010001 AS total_housing_units, arealand AS area_land, areawatr AS area_water, shape_leng, shape_area, geom
    FROM population_all;
    ```
 ![Filtered Table](Images/updated_filtered_population.png)

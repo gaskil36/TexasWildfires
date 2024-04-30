@@ -388,10 +388,10 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
 
 ## Spatial Queries on CONUS Land Cover Data 
 ### Step 1: Get the pixel values and the count of each, and classify by name  
-![2021 CONUS Landcover Raster](Images/conus_cover.png)
+![Raw Values](Images/1_raw_values.png)![Create Tables](Images/2_create_table.png)![Intermediate Summary Table](Images/3_inter_summary.png)
 
 ### Step 2: Calculate area per land cover type and add to a new table called landcover_area  
-![2021 CONUS Landcover Raster](Images/conus_cover.png)
+![Area Calculation](Images/4_area_calculation.png)
 
 ### Step 3: Add an area column to landcover_summary and transfer values from the landcover_area table  
-![2021 CONUS Landcover Raster](Images/conus_cover.png)
+![Add Area Summary](Images/5_add_area_summary.png)

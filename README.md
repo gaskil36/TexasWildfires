@@ -154,12 +154,15 @@ The screenshot below shows the raster and vector files listed in the local direc
    raster2pgsql -s 4326 -I -C -M Texas_EVI_Prefire.tif public.texas_evi_prefire_rast > texas_evi_prefire.sql
    raster2pgsql -s 4326 -I -C -M Texas_EVI_Postfire.tif public.texas_evi_postfire_rast > texas_evi_postfire.sql
    raster2pgsql -s 4326 -I -C -M Texas_DNBR.tif public.texas_DNBR_rast > texas_DNBR.sql
-   raster2pgsql -s 4326 -I -C -M Texas_BurntClassesClipped.tif public.texas_BurntClassesClipped_rast > texas_BurntClassesClipped.sql
-   raster2pgsql -s 4326 -I -C -M Texas_burnSeverityClipped.tif public.texas_burnSeverityClipped_rast > texas_burnSeverityClipped.sql
+   raster2pgsql -s 4326 -t 30x30 -I -C -M Texas_BurntClassesClipped.tif public.texas_BurntClassesClipped_rast > texas_BurntClassesClipped.sql
+   raster2pgsql -s 4326 -t 30x30 -I -C -M Texas_burnSeverityClipped.tif public.texas_burnSeverityClipped_rast > texas_burnSeverityClipped.sql
    raster2pgsql -s 4326 -I -C -M classified_landcover_clipped.tif public.classified_landcover_clipped_rast > classified_landcover_clipped.sql
    ```
-   
-### Fix 100% Storage in the Home Directory
+
+## Difficulties With Google Cloud And Solutions  
+I ran into many unexpected issues using Google Cloud. With enough troubleshooting, however, it is possible to overcome these obstacles. Below are a few problems and solutions to take note of:
+
+### Issue 1: Fix 100% Storage in the Home Directory
 1. Before running the shp2pgsql command for shapefiles, I encountered the following error:
 ![Full Storage](Images/full_storage.png)
 2. Remove the unnecessary .tif files that are stored in the home directory. They are safely stored in the cloud storage bucket.
@@ -176,10 +179,8 @@ The screenshot below shows the raster and vector files listed in the local direc
    rm classified_landcover_clipped.tif
    ```
 3. The home directory should now only contain the .sql files and the unconverted .shp files:  
-![.tif Files Removed](Images/full_storage.png)
-
-### Backup All SQL Files
-1. Safely store all raster .sql files by Pushing to the Cloud Storage Bucket
+![.tif Files Removed](Images/full_storage.png)  
+4. Backup All SQL Files: Safely store all raster .sql files by Pushing to the Cloud Storage Bucket
    ```shell
    gsutil cp texas_prefire.sql gs://texas_wildfire_bucket/
    gsutil cp texas_postfire.sql gs://texas_wildfire_bucket/
@@ -191,9 +192,9 @@ The screenshot below shows the raster and vector files listed in the local direc
    gsutil cp texas_BurntClassesClipped.sql gs://texas_wildfire_bucket/
    gsutil cp texas_burnSeverityClipped.sql gs://texas_wildfire_bucket/
    gsutil cp classified_landcover_clipped.sql gs://texas_wildfire_bucket/
-   ```
-
-### Convert Vector to SQL File
+   ```  
+### Issue 2: Insertion of Large Datasets
+#### Convert Vector to SQL File
 1. With enough space on the disk and important files backed up, we can continue to convert the last vector shapefile to an .sql file
 2. IMPORTANT: In the next section, I ran into an issue with importing the shapefile .sql file into the database. This was solved by splitting the shapefile into three smaller shapefiles. As such, the previous file "TX_OK_Fire_Blocks.shp" should be completely removed from both the home directory and the cloud storage bucket  
    ```shell
@@ -218,10 +219,8 @@ The screenshot below shows the raster and vector files listed in the local direc
    shp2pgsql -s 4326 -I population_first.shp public.population_first > population_first.sql
    shp2pgsql -s 4326 -I population_second.shp public.population_second > population_second.sql
    shp2pgsql -s 4326 -I population_third.shp public.population_third > population_third.sql
-   ```
-   
-### Clean Home Directory and Backup Important Files
-1. We can now remove the original shapefile, .shx and .dbf files from the home directory
+   ```  
+8. We can now remove the original shapefile, .shx and .dbf files from the home directory
    ```shell
    rm population_first.shp
    rm population_first.shx
@@ -235,13 +234,26 @@ The screenshot below shows the raster and vector files listed in the local direc
    rm population_third.shx
    rm population_third.dbf
    ```
-2. Backup the final population vector .sql file by Pushing to the Cloud Storage Bucket
+9. Backup the final population vector .sql file by Pushing to the Cloud Storage Bucket
     ```shell
    gsutil cp population_first.sql gs://texas_wildfire_bucket/
    gsutil cp population_second.sql gs://texas_wildfire_bucket/
    gsutil cp population_third.sql gs://texas_wildfire_bucket/
    ```
-3. The home directory should now only contain the .sql files for all raster and vector files
+### Issue 3: Insertion of Raster Datasets  
+I encountered issue late into the project with querying raster data. This was fixed using the following steps:  
+1. Remove visualization parameters from Google Earth Engine
+2. Run raster2pgsql locally on the new .tif files, then upload back to the cloud bucket.
+3. Add -t 30x30 parameters on raster files, including the binary burn and 5-class severity raster
+   ```SQL
+   raster2pgsql -s 4326 -t 30x30 -I -C -M Texas_BurntClassesClipped.tif public.texas_BurntClassesClipped_rast > texas_BurntClassesClipped.sql
+   raster2pgsql -s 4326 -t 30x30 -I -C -M Texas_burnSeverityClipped.tif public.texas_burnSeverityClipped_rast > texas_burnSeverityClipped.sql
+   ```
+
+### Issue 4: Querying of 5 Class Severity Raster and Displaying All Classes in the Database  
+This issue is still unsolved. Only 3 out of 5 parameters appear when querying the texas_burnSeverityClipped_rast file in the database. One potential cause for this is that the severity classification I applied in Google Earth Engine is considered a color palette, and the exported .tif file defaults 3 of the classes to the RGB channels, even when removing the visualization parameters.
+
+### The home directory should now only contain the .sql files for all raster and vector files
 ![Clean Home Directory](Images/clean_wd.png)
 
 ### Connect to Postgres Database and Upload all .sql Files

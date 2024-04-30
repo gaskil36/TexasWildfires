@@ -360,28 +360,38 @@ This issue is still unsolved. Only 3 out of 5 parameters appear when querying th
 ![Population By County](Images/population_by_county.png)
 
 ## Spatial Queries on Binary Burn Raster  
-### Step 1: Identify total number of pixels using .rReport function of QGIS
+### Step 1: Identify total number of pixels using .rReport function of QGIS  
+![.rReport function of QGIS  ](Images/0_raster_value_report.png)
 
 ### Step 2: Batch Processing
 1. Batch Size: 15 million
 2. Total Pixels to Insert: ~50 million
+![Batch Processing](Images/1_batch_processing.png)
 
 ### Step 3: Get the total number of tiles    
 The total number of pixels were too large to query. By querying by the number of tiles, we are able to include the entire raster. The total number of tiles is 56,363  
+![Get the total number of tiles](Images/2_total_tiles.png)
 
 ### Step 4: Get the total area of the raster 
-The total area of the raster is 36,743 square kilometers
+The total area of the raster is 36,743 square kilometers  
+![Get the total area of the raster](Images/3_total_area_sq_km.png)
 
 ### Step 5: Create the pixel_summary table  
 This table is necessary to know for upcoming calculations. In the binary burn raster, values of 1 represent burned areas while values of 0 represent unburned areas  
+![Create the pixel_summary table ](Images/4_1_burn_pixel_summary.png)
 
-### Step 6: Confirm total pixels matches the QGIS r.Report  
+### Step 6: Confirm total pixels matches the QGIS r.Report 
+![Confirm total pixels matches the QGIS r.Report](Images/5_total_pixels.png)
 
 ### Step 7: Calculate the total area of unburned and burned land  
+![Calculate the total area of unburned and burned land  ](Images/6_burned_area_final.png)
 
 ## Spatial Queries on CONUS Land Cover Data 
-### Step 1: Get the pixel values and the count of each, and classify by name
+### Step 1: Get the pixel values and the count of each, and classify by name  
+![2021 CONUS Landcover Raster](Images/conus_cover.png)
 
 ### Step 2: Calculate area per land cover type and add to a new table called landcover_area  
+![2021 CONUS Landcover Raster](Images/conus_cover.png)
 
 ### Step 3: Add an area column to landcover_summary and transfer values from the landcover_area table  
+![2021 CONUS Landcover Raster](Images/conus_cover.png)

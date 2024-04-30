@@ -242,9 +242,10 @@ I ran into many unexpected issues using Google Cloud. With enough troubleshootin
    ```
 ### Issue 3: Insertion of Raster Datasets  
 I encountered issue late into the project with querying raster data. This was fixed using the following steps:  
-1. Remove visualization parameters from Google Earth Engine
-2. Run raster2pgsql locally on the new .tif files, then upload back to the cloud bucket.
-3. Add -t 30x30 parameters on raster files, including the binary burn and 5-class severity raster
+1. Remove visualization parameters from Google Earth Engine  
+![Remove visualization parameters from Google Earth Engine](Images/gee_export_parameters.png)  
+3. Run raster2pgsql locally on the new .tif files, then upload back to the cloud bucket.
+4. Add -t 30x30 parameters on raster files, including the binary burn and 5-class severity raster
    ```SQL
    raster2pgsql -s 4326 -t 30x30 -I -C -M Texas_BurntClassesClipped.tif public.texas_BurntClassesClipped_rast > texas_BurntClassesClipped.sql
    raster2pgsql -s 4326 -t 30x30 -I -C -M Texas_burnSeverityClipped.tif public.texas_burnSeverityClipped_rast > texas_burnSeverityClipped.sql

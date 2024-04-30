@@ -243,7 +243,17 @@ I ran into many unexpected issues using Google Cloud. With enough troubleshootin
 ### Issue 3: Insertion of Raster Datasets  
 I encountered issue late into the project with querying raster data. This was fixed using the following steps:  
 1. Remove visualization parameters from Google Earth Engine  
-![Remove visualization parameters from Google Earth Engine](Images/gee_export_parameters.png)  
+     ```JS
+     Export.image.toDrive({
+       image: burnSeverityClipped,
+       description: 'Texas_burnSeverityClipped',
+       crs: burnSeverityClipped.crs,
+       crsTransform: burnSeverityClipped.transform,
+       region: fireLocation,
+       scale: 30,
+       fileFormat: "GeoTiff"
+     });
+     ```
 3. Run raster2pgsql locally on the new .tif files, then upload back to the cloud bucket.
 4. Add -t 30x30 parameters on raster files, including the binary burn and 5-class severity raster
    ```SQL
@@ -309,8 +319,8 @@ This issue is still unsolved. Only 3 out of 5 parameters appear when querying th
    ```SQL
    SELECT COUNT(name)
    FROM population_all;
-   ```  
-![Ensure the operation completed successfully and all 26,851 rows are present](Images/count_return.png)  
+   ```
+   ![Ensure the operation completed successfully and all 26,851 rows are present](Images/count_return.png)  
 5. The original population dataset has many unnecessary fields. Process the population dataset by only including relevant fields. The description for each field can be found [here](https://www.arcgis.com/home/item.html?id=b3642e91b49548f5af772394b0537681&view=list&sortOrder=desc&sortField=defaultFSOrder#data)
    ```
    Fields to keep:

@@ -409,4 +409,5 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
 ![Area Calculation](Images/4_area_calculation.png)
 
 ### Step 3: Add an area column to landcover_summary and transfer values from the landcover_area table  
-![Add Area Summary](Images/5_add_area_summary.png)
+![Add Area Summary](Images/5_add_area_summary.png)  
+![Final Land Cover Summary](Images/6_final_landcover_summary.png)

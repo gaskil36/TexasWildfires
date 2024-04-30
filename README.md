@@ -379,4 +379,9 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
 
 ### Step 7: Calculate the total area of unburned and burned land  
 
+## Spatial Queries on CONUS Land Cover Data 
+### Step 1: Get the pixel values and the count of each, and classify by name
 
+### Step 2: Calculate area per land cover type and add to a new table called landcover_area  
+
+### Step 3: Add an area column to landcover_summary and transfer values from the landcover_area table  

@@ -135,9 +135,9 @@ Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imag
    gsutil cp gs://texas_wildfire_bucket/Texas_burnSeverityClipped.tif Texas_burnSeverityClipped.tif
    gsutil cp gs://texas_wildfire_bucket/classified_landcover_clipped.tif classified_landcover_clipped.tif
    gsutil cp gs://texas_wildfire_bucket/TX_OK_Fire_Blocks.shp TX_OK_Fire_Blocks.shp
-   ```
-The screenshot below shows the raster and vector files listed in the local directory:
-![Import rasters and shapefiles from Cloud Storage Bucket to Local Cloud Console Environment](Images/bucket_to_cloud_console.png)
+   ```  
+   The screenshot below shows the raster and vector files listed in the local directory:  
+   ![Import rasters and shapefiles from Cloud Storage Bucket to Local Cloud Console Environment](Images/bucket_to_cloud_console.png)
 
 ### Convert all Rasters to SQL Files
 1. When trying to run raster2pgsql, I encountered the following error  
@@ -178,9 +178,9 @@ I ran into many unexpected issues using Google Cloud. With enough troubleshootin
    rm Texas_burnSeverityClipped.tif
    rm classified_landcover_clipped.tif
    ```
-3. The home directory should now only contain the .sql files and the unconverted .shp files:  
-![.tif Files Removed](Images/full_storage.png)  
-4. Backup All SQL Files: Safely store all raster .sql files by Pushing to the Cloud Storage Bucket
+3. The home directory should now only contain the .sql files and the unconverted .shp files:
+   ![.tif Files Removed](Images/full_storage.png)  
+5. Backup All SQL Files: Safely store all raster .sql files by Pushing to the Cloud Storage Bucket
    ```shell
    gsutil cp texas_prefire.sql gs://texas_wildfire_bucket/
    gsutil cp texas_postfire.sql gs://texas_wildfire_bucket/

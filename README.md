@@ -359,65 +359,24 @@ This issue is still unsolved. Only 3 out of 5 parameters appear when querying th
    ```
 ![Population By County](Images/population_by_county.png)
 
-## Spatial Queries
-### All of the spatial queries for this project involve raster data, which has been difficult to work in using PostGIS
-#### I began by running spatial queries on the binary burn raster and the classified burn severity raster
-1. Print the count of unburnt pixels vs burnt pixels to identify how to query for each type
-   ```SQL
-   SELECT (ST_ValueCount(rast)).value AS pixel_value,
-       (ST_ValueCount(rast)).count AS pixel_count
-   FROM texas_burntclassesclipped_rast;
-   ```
-   This query successfully returns the count of unburnt pixels (0), and burnt pixels (255):  
-![Binary Count Working](Images/binary_count_working.png)
-2. Print the count of each class in the burn severity classification raster
-   ```SQL
-   SELECT (ST_ValueCount(rast)).value AS pixel_value,
-       (ST_ValueCount(rast)).count AS pixel_count
-   FROM texas_burnseverityclipped_rast;
-   ```
-   The results of this query are confusing. I expected 5 classes and instead only got 3 back:  
-![Binary Count Working](Images/classes_count_issue.png)
+## Spatial Queries on Binary Burn Raster  
+### Step 1: Identify total number of pixels using .rReport function of QGIS
 
-3. These queries attempt to get the area burnt and unburnt, but there are issues with the units. One pixel should be 30x30, but the area results are too large
-   ```SQL
-   -- Calculate the total area of each pixel (one pixel should be 30x30 meters)
-   WITH pixel_areas AS (
-       SELECT
-           -- Calculate the total number of pixels in the raster and cast to bigint
-           CAST(ST_Width(rast) * ST_Height(rast) AS bigint) AS total_pixels,
-           -- Calculate the area represented by each pixel in square meters
-           CAST(ST_Width(rast) * ST_Height(rast) AS bigint) * (30 * 30) AS area_per_pixel
-       FROM
-           texas_burntclassesclipped_rast
-   )
-   
-   -- Calculate total burnt and unburnt area
-   SELECT
-       -- Pixel value representing burnt or unburnt areas
-       pixel_value,
-       -- Calculate the total burnt or unburnt area by summing the product of pixel count and area per pixel
-       SUM(pixel_count * area_per_pixel) AS total_area
-   FROM
-       (
-           -- Count the occurrences of each pixel value in the raster
-           SELECT
-               (ST_ValueCount(rast)).value AS pixel_value,
-               (ST_ValueCount(rast)).count AS pixel_count
-           FROM
-               texas_burntclassesclipped_rast
-       ) AS counts,
-       pixel_areas
-   WHERE
-       -- Filter for pixel values representing burnt (255) or unburnt (0) areas
-       pixel_value IN (0, 255)
-   GROUP BY
-       pixel_value;
-   ```
-Pixel value 0 has an area of 1747064171496194100 (sq m); pixel value 255 has an area of 47182212539266000 which is still way too large. The correct area in sq meters of 73,354,848,000 was checked using the population dataset: 
-   ```SQL
-      -- Get the total area of counties in the study area for reference
-   -- Result: 73354848000.516898197
-   SELECT SUM(shape_area) FROM
-     population_by_county LIMIT 1000;
-   ```
+### Step 2: Batch Processing
+1. Batch Size: 15 million
+2. Total Pixels to Insert: ~50 million
+
+### Step 3: Get the total number of tiles    
+The total number of pixels were too large to query. By querying by the number of tiles, we are able to include the entire raster. The total number of tiles is 56,363  
+
+### Step 4: Get the total area of the raster 
+The total area of the raster is 36,743 square kilometers
+
+### Step 5: Create the pixel_summary table  
+This table is necessary to know for upcoming calculations. In the binary burn raster, values of 1 represent burned areas while values of 0 represent unburned areas  
+
+### Step 6: Confirm total pixels matches the QGIS r.Report  
+
+### Step 7: Calculate the total area of unburned and burned land  
+
+

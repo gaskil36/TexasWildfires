@@ -1,4 +1,5 @@
-# Texas Wildfires: Change Detection of Smokehouse Creek Fire Using Google Earth Engine and PostGIS Spatial Database Queries
+# Texas Wildfires: Change Detection of Smokehouse Creek Fire Using Google Earth Engine and PostGIS Spatial Database Queries  
+![Fire Cover Image](Images/20240302_Smokehouse_Creek_SC_0644-2.jpg)
 
 ### Ben Gaskill
 ### IDCE 376, Spatial Database Development in Practice, Spring 2024
@@ -11,21 +12,24 @@ The initial contents of the repository can be navigated as follows:
 2. Google Earth Engine code for raster generation of FCC, EVI, NBR, DNBR, Burned Severity, and Burned Binary can be found [here](https://code.earthengine.google.com/b80f5e7fed31c15e0ee0efca2c5e241f)
 3. The rubric can be viewed in the *Final_Project_Rubric.pdf* document.
 
+## Background
+The Smokehouse Creek was the largest wildfire in Texas history. Lasting from February 26th to March 16th, 2024, the fire was caused by downed power lines. The extent of the fire crosses state boundaries and also includes portions of eastern Oklahoma.
+
 ## Data Sources
 1. [Texas County Boundaries](https://gis-txdot.opendata.arcgis.com/datasets/TXDOT::texas-county-boundaries-detailed/about)
 2. [Oklahoma County Boundaries](https://csagis-uok.opendata.arcgis.com/datasets/4180120bd0184f4c8183185947f638e7_0/explore?location=35.197309%2C-98.716546%2C6.80)
-3. Texas 2020 Cenus Tract Block Level [(Obtained from ArcGIS Living Atlas)](https://www.arcgis.com/home/item.html?id=e71cbcf456084748ba0b8741d4f956d9)
+3. Texas 2020 Census Tract Block Level [(Obtained from ArcGIS Living Atlas)](https://www.arcgis.com/home/item.html?id=e71cbcf456084748ba0b8741d4f956d9)
 4. Oklahoma 2020 Census Tract Block Level [(Obtained from ArcGIS Living Atlas)](https://www.arcgis.com/home/item.html?id=5ef7d4739af346ccba858abf2d70aeb9)
 5. [2021 CONUS Landcover Dataset](https://www.mrlc.gov/viewer/)
 
 ## Pre-processing Steps
-1. Detailed analysis of the wildfire was conducted in Google Earth Engine. See next section for details
+1. Detailed analysis of the wildfire was conducted in Google Earth Engine. See the next section for details
 2. Each output was exported from Google Earth Engine and visualized in QGIS.
-3. The Texas and Oklahoma County Boundaries was subsetted and clipped to only include counties within the extent of the burn rasters.
+3. The Texas and Oklahoma County Boundaries were subsetted and clipped to only include counties within the extent of the burn rasters.
 4. The Texas and Oklahoma County 2020 Census data was opened in ArcGIS, and clipped to only include counties within the extent of the burn rasters. See below for an initial visualization.
 5. The 2021 CONUS Landcover Dataset was clipped to the same extent as the other fire raster files.
 6. A Google Cloud Postgres SQL database instance was set up and initialized with the name of "remotesensing", utilizing the existing Google Earth Engine Project with a subdirectory for this analysis.
-7. All Raster files were vectorized utilizing the Polygonize function of QGIS and stored as a backup option. (Can be directly imported to a local POSTGIS enabled Postgres database using PGAdmin if necessary.
+7. All Raster files were vectorized utilizing the Polygonize function of QGIS and stored as a backup option. (Can be directly imported to a local POSTGIS-enabled Postgres database using PGAdmin if necessary.
 
 ### 2020 Census Data Clipped to Extent of the Smokehouse Creek Fire
 ![Prefire False Color Composite](Images/population_visualization.png)
@@ -74,11 +78,13 @@ Landsat 9 Imagery was utilized. The original goal was to utilize Sentinel 2 imag
 
 ## Working with Google Cloud
 ### Pre-Processing Steps
-1. Create a cloud project
-2. Connect to Github and create triggers for push and pull
-3. Create a cloud storage bucket and upload all rasters and shapefiles
-4. Create Postgresql Instance in Google Cloud
-   
+1. Create a cloud project  
+![Create a cloud project](Images/cloud_project.png)
+3. Create a cloud storage bucket and upload all rasters and shapefiles  
+![Create a cloud storage bucket](Images/bucket.png)
+5. Create a Postgresql Instance in Google Cloud  
+![Create Postgresql Instance](Images/create_instance.png)
+     
 ### PostGIS Setup (in cloud console)
 1. Navigate to the Postgresql bin  
    ```shell

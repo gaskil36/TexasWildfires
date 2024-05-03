@@ -587,4 +587,4 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
        END
    FROM landcover_area AS la;
    ```
-![Final Land Cover Summary](Images/6_final_landcover_summary.png)
+![Final Land Cover Summary](Images/6_final_landcover_summary_3.png)

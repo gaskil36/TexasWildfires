@@ -495,7 +495,7 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
        END LOOP;
    END $$;
    ```
-### Step 2: Create the pixel summary table  
+### Step 2: Create the pixel summary table   
    ```SQL
    CREATE TABLE texas_burn_severity_pixel_summary AS
    SELECT pixel_value, COUNT(*) AS count
@@ -504,9 +504,9 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
    ```
 ![Create the pixel_summary table ](Images/pixel_summary.png)  
 
-### Step 3: Calculate the total area of each class
-### Note: I was successful with the first four classes, but class 5 (high severity) did not appear.
-### According to Earth Engine, only 30 square kilometers were identified as high severity.  
+### Step 3: Calculate the total area of each class  
+### Note: I was successful with the first four classes, but class 5 (high severity) did not appear.  
+### According to Earth Engine, only 30 square kilometers were identified as high severity.    
    ```SQL
    CREATE TABLE severity_results AS
    WITH pixel_summary AS (
@@ -522,10 +522,15 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
    	(SELECT count FROM texas_burn_severity_pixel_summary WHERE pixel_value = 3) * (30 * 30) * SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_burned_moderate_sq_km
    FROM texas_burntclassesclipped_rast, pixel_summary
    GROUP BY total_pixels;
-   ```
+   ```  
 ![Create the pixel_summary table ](Images/severity_results.png)  
 
-
+### Overall Results From Burn Severity Classified Raster: 
+1. Enhanced Regrowth: 3,303,18 square kilometers
+2. Unburned: 27,217.47 square kilometers
+3. Burned Low Severity: 5,621.33 square kilometers
+4. Burned Moderate Severity: 601.05 square kilometers
+5. Burned High Severity: 30 square kilometers (according to Google Earth Engine Results)  
 
 ## Spatial Queries on CONUS Land Cover Data 
 ### Step 1: Get the pixel values and the count of each, and classify by name  
@@ -537,7 +542,7 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
           (ST_ValueCount(rast)).count AS pixel_count
    FROM classified_landcover_clipped_rast;
    ```
-![Raw Values](Images/1_raw_values1.png)
+![Raw Values](Images/1_raw_values1.png)  
 2. Create a new table called landcover_summary to convert pixel_values to the name of the corresponding land cover type  
    ```SQL
    -- Create a new table to summarize landcover

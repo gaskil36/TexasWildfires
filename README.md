@@ -419,14 +419,27 @@ The total area of the raster is 36,743 square kilometers
    SELECT SUM(ST_Area(rast::geometry::geography)) / 1000000.0 AS total_area_sq_km
    FROM texas_burntclassesclipped_rast;
    ```
-![Get the total area of the raster](Images/3_total_area_sq_km.png)
+![Get the total area of the raster](Images/3_total_area_sq_km3.png)
 
 ### Step 5: Create the pixel_summary table  
 This table is necessary to know for upcoming calculations. In the binary burn raster, values of 1 represent burned areas while values of 0 represent unburned areas  
-![Create the pixel_summary table ](Images/4_1_burn_pixel_summary.png)
+   ```SQL
+   -- Get the total number of burnt 1 and unburnt 0 pixels (CROSS CHECKED IN QGIS TO CONFIRM 1 IS BURNT AND O IS UNBURNT) (56,363)
+   CREATE TABLE texas_burnt_pixel_summary AS
+   SELECT pixel_value, COUNT(*) AS count
+   FROM texas_burnt_pixel_points
+   GROUP BY pixel_value;
+   ```
+![Create the pixel_summary table ](Images/4_1_burn_pixel_summary_4_1.png)
 
-### Step 6: Confirm total pixels matches the QGIS r.Report 
-![Confirm total pixels matches the QGIS r.Report](Images/5_total_pixels.png)
+### Step 6: Confirm total pixels match the QGIS r.Report  
+   ```SQL
+   -- 56,363 records in table * (30x30) for each tile = 50,726,700 (matches the qgis expected total pixels)
+   -- Calculate the total number of pixels
+   SELECT COUNT(*) * (30 * 30) AS total_pixels
+   FROM texas_burnt_pixel_points;
+   ```
+![Confirm total pixels match the QGIS r.Report](Images/5_total_pixels5.png)
 
 ### Step 7: Calculate the total area of unburned and burned land  
 ![Calculate the total area of unburned and burned land  ](Images/6_burned_area_final.png)

@@ -476,7 +476,7 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
           (ST_ValueCount(rast)).count AS pixel_count
    FROM classified_landcover_clipped_rast;
    ```
-![Raw Values](Images/1_raw_values.png)
+![Raw Values](Images/1_raw_values1.png)
 2. Create a new table called landcover_summary to convert pixel_values to the name of the corresponding land cover type  
    ```SQL
    -- Create a new table to summarize landcover
@@ -518,8 +518,7 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
        FROM 
            landcover_raw_values
        ) AS v;
-   ```
-![Create Tables](Images/2_create_table.png)
+   ```   
 3. The landcover_summary table should now look like this:  
    ```SQL
    -- Select from the new table
@@ -527,7 +526,7 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
    FROM landcover_summary
    ORDER BY pixel_count DESC;
    ```
-![Intermediate Summary Table](Images/3_inter_summary.png)
+![Intermediate Summary Table](Images/3_inter_summary3.png)
 
 ### Step 2: Calculate area per land cover type and add to a new table called landcover_area  
    ```SQL
@@ -559,7 +558,6 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
    FROM classified_landcover_clipped_rast, pixel_summary
    GROUP BY total_pixels;
    ```
-![Area Calculation](Images/4_area_calculation.png)
 
 ### Step 3: Add an area column to landcover_summary and transfer values from the landcover_area table  
    ```SQL
@@ -589,5 +587,4 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
        END
    FROM landcover_area AS la;
    ```
-![Add Area Summary](Images/5_add_area_summary.png)  
 ![Final Land Cover Summary](Images/6_final_landcover_summary.png)

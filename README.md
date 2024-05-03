@@ -468,16 +468,126 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
 
 ## Spatial Queries on CONUS Land Cover Data 
 ### Step 1: Get the pixel values and the count of each, and classify by name  
-1. Create a new table called landcover_raw_values to hold the pixel value as well as the pixel count  
+1. Create a new table called landcover_raw_values to hold the pixel value as well as the pixel count
+   ```SQL
+      -- Get the pixel values and counts from the raster
+   CREATE TABLE landcover_raw_values AS
+   SELECT (ST_ValueCount(rast)).value AS pixel_value,
+          (ST_ValueCount(rast)).count AS pixel_count
+   FROM classified_landcover_clipped_rast;
+   ```
 ![Raw Values](Images/1_raw_values.png)
 2. Create a new table called landcover_summary to convert pixel_values to the name of the corresponding land cover type  
+   ```SQL
+   -- Create a new table to summarize landcover
+   CREATE TABLE landcover_summary (
+       landcover_type TEXT,
+       pixel_count INTEGER
+   );
+   
+   INSERT INTO landcover_summary (landcover_type, pixel_count)
+   SELECT 
+       CASE
+           WHEN pixel_value = 11 THEN 'Open Water'
+           WHEN pixel_value = 12 THEN 'Perennial Ice/Snow'
+           WHEN pixel_value = 21 THEN 'Developed, Open Space'
+           WHEN pixel_value = 22 THEN 'Developed, Low Intensity'
+           WHEN pixel_value = 23 THEN 'Developed, Medium Intensity'
+           WHEN pixel_value = 24 THEN 'Developed High Intensity'
+           WHEN pixel_value = 31 THEN 'Barren Land (Rock/Sand/Clay)'
+           WHEN pixel_value = 41 THEN 'Deciduous Forest'
+           WHEN pixel_value = 42 THEN 'Evergreen Forest'
+           WHEN pixel_value = 43 THEN 'Mixed Forest'
+           WHEN pixel_value = 51 THEN 'Dwarf Scrub'
+           WHEN pixel_value = 52 THEN 'Shrub/Scrub'
+           WHEN pixel_value = 71 THEN 'Grassland/Herbaceous'
+           WHEN pixel_value = 72 THEN 'Sedge/Herbaceous'
+           WHEN pixel_value = 73 THEN 'Lichens'
+           WHEN pixel_value = 74 THEN 'Moss'
+           WHEN pixel_value = 81 THEN 'Pasture/Hay'
+           WHEN pixel_value = 82 THEN 'Cultivated Crops'
+           WHEN pixel_value = 90 THEN 'Woody Wetlands'
+           WHEN pixel_value = 95 THEN 'Emergent Herbaceous Wetlands'
+           ELSE 'Other'
+       END AS landcover_type,
+       pixel_count
+   FROM 
+       (SELECT 
+           pixel_value, 
+           pixel_count
+       FROM 
+           landcover_raw_values
+       ) AS v;
+   ```
 ![Create Tables](Images/2_create_table.png)
 3. The landcover_summary table should now look like this:  
+   ```SQL
+   -- Select from the new table
+   SELECT * 
+   FROM landcover_summary
+   ORDER BY pixel_count DESC;
+   ```
 ![Intermediate Summary Table](Images/3_inter_summary.png)
 
 ### Step 2: Calculate area per land cover type and add to a new table called landcover_area  
+   ```SQL
+   -- Calculate landcover area
+   -- Get total pixels, use to calculate area per pixel, total area unburned, and total area burned
+   CREATE TABLE landcover_area AS
+   WITH pixel_summary AS (
+       SELECT SUM(pixel_count) as total_pixels 
+       FROM landcover_summary
+   )
+   SELECT 
+   	-- Area per pixel should be 36743.02775699519 sq km  / 41044500 = 0.0008951997894236 sq km
+       SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS area_per_pixel_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 11)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Open_Water_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 21)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Developed_Open_Space_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 22)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Developed_Low_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 23)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Developed_Medium_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 24)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Developed_High_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 31)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Barren_Land_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 41)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Deciduous_Forest_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 42)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Evergreen_Forest_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 43)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Mixed_Forest_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 52)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Shrub_Scrub_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 71)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Grassland_Herbaceous_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 81)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Pasture_Hay_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 82)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Cultivated_Crops_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 90)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Woody_Wetlands_sq_km,
+       (SELECT pixel_count FROM landcover_raw_values WHERE pixel_value = 95)* SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_Emergent_Herbaceous_Wetlands_sq_km
+   FROM classified_landcover_clipped_rast, pixel_summary
+   GROUP BY total_pixels;
+   ```
 ![Area Calculation](Images/4_area_calculation.png)
 
 ### Step 3: Add an area column to landcover_summary and transfer values from the landcover_area table  
+   ```SQL
+   -- Append to landcover_summary table
+   ALTER TABLE landcover_summary ADD COLUMN area_sq_km NUMERIC;
+   
+   -- Update the area column using values from the landcover_area table
+   UPDATE landcover_summary AS ls
+   SET area_sq_km = 
+       CASE 
+           WHEN ls.landcover_type = 'Open Water' THEN la.total_area_Open_Water_sq_km
+           WHEN ls.landcover_type = 'Developed, Open Space' THEN la.total_area_Developed_Open_Space_sq_km
+           WHEN ls.landcover_type = 'Developed, Low Intensity' THEN la.total_area_Developed_Low_sq_km
+           WHEN ls.landcover_type = 'Developed, Medium Intensity' THEN la.total_area_Developed_Medium_sq_km
+           WHEN ls.landcover_type = 'Developed High Intensity' THEN la.total_area_Developed_High_sq_km
+           WHEN ls.landcover_type = 'Barren Land (Rock/Sand/Clay)' THEN la.total_area_Barren_Land_sq_km
+           WHEN ls.landcover_type = 'Deciduous Forest' THEN la.total_area_Deciduous_Forest_sq_km
+           WHEN ls.landcover_type = 'Evergreen Forest' THEN la.total_area_Evergreen_Forest_sq_km
+           WHEN ls.landcover_type = 'Mixed Forest' THEN la.total_area_Mixed_Forest_sq_km
+           WHEN ls.landcover_type = 'Shrub/Scrub' THEN la.total_area_Shrub_Scrub_sq_km
+           WHEN ls.landcover_type = 'Grassland/Herbaceous' THEN la.total_area_Grassland_Herbaceous_sq_km
+           WHEN ls.landcover_type = 'Pasture/Hay' THEN la.total_area_Pasture_Hay_sq_km
+           WHEN ls.landcover_type = 'Cultivated Crops' THEN la.total_area_Cultivated_Crops_sq_km
+           WHEN ls.landcover_type = 'Woody Wetlands' THEN la.total_area_Woody_Wetlands_sq_km
+           WHEN ls.landcover_type = 'Emergent Herbaceous Wetlands' THEN la.total_area_Emergent_Herbaceous_Wetlands_sq_km
+           ELSE NULL
+       END
+   FROM landcover_area AS la;
+   ```
 ![Add Area Summary](Images/5_add_area_summary.png)  
 ![Final Land Cover Summary](Images/6_final_landcover_summary.png)

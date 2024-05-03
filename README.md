@@ -406,12 +406,19 @@ This issue is still unsolved. Only 3 out of 5 parameters appear when querying th
 ### Step 3: Get the total number of tiles    
 The total number of pixels were too large to query. By querying by the number of tiles, we are able to include the entire raster. The total number of tiles is 56,363  
    ```SQL
-```
-
+   -- Get the total number of tiles in the raster
+   SELECT COUNT(pixel_value) AS pixel_count
+   FROM texas_burnt_pixel_points;
+   ```
 ![Get the total number of tiles](Images/2_total_tiles2.png)
 
 ### Step 4: Get the total area of the raster 
-The total area of the raster is 36,743 square kilometers  
+The total area of the raster is 36,743 square kilometers 
+   ```SQL
+   -- Get the total area (sq km) of the raster (CROSS CHECKED IN QGIS) (36743.02775699519 sq km)
+   SELECT SUM(ST_Area(rast::geometry::geography)) / 1000000.0 AS total_area_sq_km
+   FROM texas_burntclassesclipped_rast;
+   ```
 ![Get the total area of the raster](Images/3_total_area_sq_km.png)
 
 ### Step 5: Create the pixel_summary table  

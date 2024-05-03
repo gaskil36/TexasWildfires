@@ -442,7 +442,27 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
 ![Confirm total pixels match the QGIS r.Report](Images/5_total_pixels5.png)
 
 ### Step 7: Calculate the total area of unburned and burned land  
-![Calculate the total area of unburned and burned land  ](Images/6_burned_area_final.png)
+   ```SQL
+   -- Get total pixels, use to calculate area per pixel, total area unburned, and total area burned
+   CREATE TABLE binary_results AS
+   WITH pixel_summary AS (
+       SELECT 
+           COUNT(*) * (30 * 30) AS total_pixels
+       FROM texas_burnt_pixel_points
+   )
+   SELECT 
+   	-- Area per pixel should be 36743.02775699519 sq km  / 50,726,700 = 7.243330978950965e-4 sq km
+       SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS area_per_pixel_sq_km,
+   	-- Calculate the total area unburned
+   	-- 46599 records in the table * (30x30) for each tile = (41,939,100 pixels * area per pixel) = 30377.87822593224162315 sq km
+   	(SELECT count FROM texas_burnt_pixel_summary WHERE pixel_value = 0) * (30 * 30) * SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_unburned_sq_km,
+   	-- Calculate the total area burned
+   	-- 9764 records in the table * (30x30) for each tile = (8,787,600 pixels * area per pixel) = 6365.1495310629500034 sq km
+   	(SELECT count FROM texas_burnt_pixel_summary WHERE pixel_value = 1) * (30 * 30) * SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_burned_sq_km
+   FROM texas_burntclassesclipped_rast, pixel_summary
+   GROUP BY total_pixels;
+   ```
+![Calculate the total area of unburned and burned land  ](Images/6_burned_area_final6.png)
 
 ## Spatial Queries on CONUS Land Cover Data 
 ### Step 1: Get the pixel values and the count of each, and classify by name  

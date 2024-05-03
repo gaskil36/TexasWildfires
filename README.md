@@ -377,8 +377,32 @@ This issue is still unsolved. Only 3 out of 5 parameters appear when querying th
 ### Step 2: Batch Processing
 1. Batch Size: 15 million
 2. Total Pixels to Insert: ~50 million
-![Batch Processing](Images/1_batch_processing.png)
-
+   ```SQL
+   -- Create a table for batch processing of pixels, 15 million at a time.
+   CREATE TABLE texas_burnt_pixel_points (
+       pixel_value DECIMAL
+   );
+   -- Batch
+   DO $$
+   DECLARE
+       batch_size INT := 15000000;
+       total_pixels INT;
+       offsets INT := 0;
+   BEGIN
+       -- Count pixels
+       SELECT COUNT(*) INTO total_pixels FROM texas_burntclassesclipped_rast;
+       
+       WHILE offsets < total_pixels LOOP
+           INSERT INTO texas_burnt_pixel_points (pixel_value)
+           SELECT (ST_PixelAsPoints(rast)).val AS pixel_value
+           FROM texas_burntclassesclipped_rast
+           OFFSET offsets ROWS FETCH NEXT LEAST(batch_size, total_pixels - offsets) ROWS ONLY;
+           
+           offsets := offsets + batch_size;
+       END LOOP;
+   END $$;
+   ```
+   
 ### Step 3: Get the total number of tiles    
 The total number of pixels were too large to query. By querying by the number of tiles, we are able to include the entire raster. The total number of tiles is 56,363  
 ![Get the total number of tiles](Images/2_total_tiles.png)

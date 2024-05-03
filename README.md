@@ -405,7 +405,10 @@ This issue is still unsolved. Only 3 out of 5 parameters appear when querying th
     
 ### Step 3: Get the total number of tiles    
 The total number of pixels were too large to query. By querying by the number of tiles, we are able to include the entire raster. The total number of tiles is 56,363  
-![Get the total number of tiles](Images/2_total_tiles.png)
+   ```SQL
+```
+
+![Get the total number of tiles](Images/2_total_tiles2.png)
 
 ### Step 4: Get the total area of the raster 
 The total area of the raster is 36,743 square kilometers  

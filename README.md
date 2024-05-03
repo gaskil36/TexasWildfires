@@ -462,7 +462,9 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
    FROM texas_burntclassesclipped_rast, pixel_summary
    GROUP BY total_pixels;
    ```
-![Calculate the total area of unburned and burned land  ](Images/6_burned_area_final6.png)
+![Calculate the total area of unburned and burned land  ](Images/6_burned_area_final6.png)  
+
+### Overall, approximately 6,365.15 square kilometers were burned, and 30,377.88 square kilometers were left unburned.
 
 ## Spatial Queries on CONUS Land Cover Data 
 ### Step 1: Get the pixel values and the count of each, and classify by name  

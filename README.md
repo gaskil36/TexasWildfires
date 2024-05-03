@@ -466,6 +466,67 @@ This table is necessary to know for upcoming calculations. In the binary burn ra
 
 ### Overall, approximately 6,365.15 square kilometers were burned, and 30,377.88 square kilometers were left unburned.
 
+## Spatial Queries on Classified Burn Severity Raster 
+### These steps follow the same methodology as the previous section. Just replace table names with new names for the classified burn severity raster and change the logic of some of the code. See below:
+### Step 1: Batch Processing
+1. Batch Size: 15 million
+2. Total Pixels to Insert: ~50 million
+   ```SQL
+      CREATE TABLE texas_burnt_severity_pixel_points (
+       pixel_value DECIMAL
+   );
+   -- Batch
+   DO $$
+   DECLARE
+       batch_size INT := 15000000;
+       total_pixels INT;
+       offsets INT := 0;
+   BEGIN
+       -- Count pixels
+       SELECT COUNT(*) INTO total_pixels FROM texas_burnseverityclipped_rast;
+       
+       WHILE offsets < total_pixels LOOP
+           INSERT INTO texas_burnt_severity_pixel_points (pixel_value)
+           SELECT (ST_PixelAsPoints(rast)).val AS pixel_value
+           FROM texas_burnseverityclipped_rast
+           OFFSET offsets ROWS FETCH NEXT LEAST(batch_size, total_pixels - offsets) ROWS ONLY;
+           
+           offsets := offsets + batch_size;
+       END LOOP;
+   END $$;
+   ```
+### Step 2: Create the pixel summary table  
+   ```SQL
+   CREATE TABLE texas_burn_severity_pixel_summary AS
+   SELECT pixel_value, COUNT(*) AS count
+   FROM texas_burnt_severity_pixel_points
+   GROUP BY pixel_value;
+   ```
+![Create the pixel_summary table ](Images/pixel_summary.png)  
+
+### Step 3: Calculate the total area of each class
+### Note: I was successful with the first four classes, but class 5 (high severity) did not appear.
+### According to Earth Engine, only 30 square kilometers were identified as high severity.  
+   ```SQL
+   CREATE TABLE severity_results AS
+   WITH pixel_summary AS (
+       SELECT 
+           COUNT(*) * (30 * 30) AS total_pixels
+       FROM texas_burnt_severity_pixel_points
+   )
+   SELECT 
+       SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS area_per_pixel_sq_km,
+   	(SELECT count FROM texas_burn_severity_pixel_summary WHERE pixel_value = 0) * (30 * 30) * SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_regrowth_sq_km,
+   	(SELECT count FROM texas_burn_severity_pixel_summary WHERE pixel_value = 1) * (30 * 30) * SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_unburned_km,
+     (SELECT count FROM texas_burn_severity_pixel_summary WHERE pixel_value = 2) * (30 * 30) * SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_burned_low_sq_km,
+   	(SELECT count FROM texas_burn_severity_pixel_summary WHERE pixel_value = 3) * (30 * 30) * SUM(ST_Area(rast::geometry::geography)) / (1000000.0 * total_pixels) AS total_area_burned_moderate_sq_km
+   FROM texas_burntclassesclipped_rast, pixel_summary
+   GROUP BY total_pixels;
+   ```
+![Create the pixel_summary table ](Images/severity_results.png)  
+
+
+
 ## Spatial Queries on CONUS Land Cover Data 
 ### Step 1: Get the pixel values and the count of each, and classify by name  
 1. Create a new table called landcover_raw_values to hold the pixel value as well as the pixel count
